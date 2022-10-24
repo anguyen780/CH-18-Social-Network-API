@@ -1,12 +1,11 @@
-const mongoose = require('mongoose');
-const userSchema = require('./User');
+const { Schema, model } = require('mongoose');
 const reactionSchema = require('./Reaction');
 
 // Schema to create Thought model
-const thoughtSchema = new mongoose.Schema({
+const thoughtSchema = new Schema({
     thoughtText: { type: String, required: true, minlength: 1, maxlength: 280 },
-    createdAt: { type: Date, default: Date.now(), get: (date) => timeSince(date) },
-    username: { userSchema, type: String, required: true },
+    createdAt: { type: Date, default: Date.now, get: (date) => timeSince(date) },
+    username: { type: String, required: true },
     reactions: [reactionSchema],
 },
     {
