@@ -19,11 +19,11 @@ module.exports = {
             .then((thought) => {
                 return User.findOneAndUpdate(
                     { _id: req.body.userId },
-                    { $addToSet: { thoughts: Thought._id } },
+                    { $addToSet: { thoughts: thought._id } },
                     { new: true }
                 );
             })
-            .then((user) => !user ? res.status(404).json({ message: 'Thought created, but no user found with that ID' }) : res.json('Created the video ✔️')
+            .then((user) => !user ? res.status(404).json({ message: 'Thought created, but no user found with that ID' }) : res.json('Created the thought ✔️')
             )
             .catch((err) => {
                 console.log(err);
@@ -46,7 +46,7 @@ module.exports = {
     },
     // delete thought by its _id
     deleteThought(req, res){
-        Thought.findOneAndRemove({ _id: req.params.thoughtId })
+        Thought.findOneAndDelete({ _id: req.params.thoughtId })
         .then((thought) => !thought ? res.status(404).json({ message: 'No thought with this ID'}) : User.findOneAndUpdate(
             { thoughts: req.params.thoughtId },
             { $pull: { thoughts: req.params.thoughtId } },
