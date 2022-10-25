@@ -4,12 +4,14 @@ module.exports = {
     // get all users
     getUsers(req, res) {
         User.find()
+            .select('-__v')
             .then((users) => res.json(users))
             .catch((err) => res.status(500).json(err));
     },
     // get single user
     getSingleUser(req, res) {
         User.findOne({ _id: req.params.userId })
+            .select('-__v')
             .then((user) => !user ? res.status(404).json({ message: 'No user with this ID' }) : res.json(user))
             .catch((err) => res.status(500).json(err));
     },
@@ -42,24 +44,26 @@ module.exports = {
             )
             .catch((err) => res.status(500).json(err));
     },
-    addFriend(req, res){
+    // add a friend
+    addFriend(req, res) {
         User.findOneAndUpdate(
             { _id: req.params.userId },
             { $addToSet: { friends: req.params.friendId } },
-            { new: true }
-            )
-            .then((friendData) => !friendData ?res.status(404).json({ message: 'No user found with this id'}) : res.json({ message: 'Friend has been added'})
+            { runValidators: true, new: true }
+        )
+            .then((friendData) => !friendData ? res.status(404).json({ message: 'No user found with this id' }) : res.json({ message: 'Friend has been added' })
             )
             .catch((err) => res.status(500).json(err));
     },
-    deleteFriend(req, res){
+    // delete a friend
+    deleteFriend(req, res) {
         User.findOneAndUpdate(
             { _id: req.params.userId },
             { $pull: { friends: req.params.friendId } },
-            { new: true }
+            { runValidators: true, new: true }
         )
-        .then((friendData) => !friendData ? res.status(404).json({ message: 'No user found with this id' }) : res.json({ message: 'Friend has been deleted'})
-        )
-        .catch((err) => res.status(500).json(err));
+            .then((friendData) => !friendData ? res.status(404).json({ message: 'No user found with this id' }) : res.json({ message: 'Friend has been deleted' })
+            )
+            .catch((err) => res.status(500).json(err));
     }
 };
