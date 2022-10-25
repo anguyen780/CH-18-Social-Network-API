@@ -55,7 +55,7 @@ module.exports = {
                 { new: true }
             )
             )
-            .then((user) => !user ? res.status(404).json({ message: 'No user with this ID' }) : res.json({ message: 'Thought successfully deleted' })
+            .then((user) => !user ? res.status(404).json({ message: 'Thought deleted but was not attached to a user' }) : res.json({ message: 'Thought successfully deleted' })
             )
             .catch((err) => res.status(500).json(err));
     },
